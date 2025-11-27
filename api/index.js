@@ -1,4 +1,5 @@
-const serverless = require('serverless-http');
+// Export Express app directly for Vercel Node serverless runtime
+// Vercel will invoke this function for any path rewritten to /api/index.js
 const app = require('./server');
 
-module.exports = serverless(app);
+module.exports = app;
