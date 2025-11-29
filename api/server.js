@@ -219,8 +219,27 @@ app.get('/api/settings', async (req, res) => {
 // Update site settings
 app.put('/api/settings', async (req, res) => {
   try {
-    const update = { $set: req.body, $setOnInsert: { type: 'site_settings' } };
-    const options = { new: true, upsert: true, runValidators: false, strict: false }; // disable validation completely
+    // Clone body to avoid mutating req.body directly
+    const body = { ...req.body };
+
+    // Enforce constant type and prevent operator conflict on 'type'
+    if (body.type) delete body.type;
+
+    // Sanitize heroImages: ensure array of strings only
+    if (Array.isArray(body.heroImages)) {
+      body.heroImages = body.heroImages
+        .map(img => typeof img === 'string' ? img : (img && (img.url || img.secure_url || img.type) || ''))
+        .filter(Boolean);
+    }
+
+    // Defensive: strip any Mongo/operator keys accidentally passed
+    const unsafeKeys = Object.keys(body).filter(k => k.startsWith('$'));
+    unsafeKeys.forEach(k => delete body[k]);
+
+    // Build update doc without conflicting 'type' usage
+    const update = { $set: body, $setOnInsert: { type: 'site_settings' } };
+    const options = { new: true, upsert: true, runValidators: false, strict: false }; // keep validation off
+
     const settings = await Settings.findOneAndUpdate({ type: 'site_settings' }, update, options);
     res.json(settings);
   } catch (error) {
