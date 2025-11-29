@@ -99,13 +99,14 @@ app.put('/api/tours/:id', async (req, res) => {
     const tour = await Tour.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: false, strict: false } // disable validation
     );
     if (!tour) {
       return res.status(404).json({ error: 'Tour not found' });
     }
     res.json(tour);
   } catch (error) {
+    console.error('Tour update error:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -219,10 +220,11 @@ app.get('/api/settings', async (req, res) => {
 app.put('/api/settings', async (req, res) => {
   try {
     const update = { $set: req.body, $setOnInsert: { type: 'site_settings' } };
-    const options = { new: true, upsert: true, runValidators: false }; // allow partials
+    const options = { new: true, upsert: true, runValidators: false, strict: false }; // disable validation completely
     const settings = await Settings.findOneAndUpdate({ type: 'site_settings' }, update, options);
     res.json(settings);
   } catch (error) {
+    console.error('Settings update error:', error);
     res.status(400).json({ error: error.message });
   }
 });
