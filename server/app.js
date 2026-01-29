@@ -13,8 +13,8 @@ const app = express();
 const allowedOrigins = [
   process.env.ADMIN_ORIGIN,
   process.env.MAIN_ORIGIN,
-  'https://hauntingvoyagers-9zwz.vercel.app',
-  'https://hauntingvoyagers.vercel.app'
+  'https://haunt-black.vercel.app',
+  'https://haunt-m6ot.vercel.app'
 ].filter(Boolean);
 
 const corsOptions = {
