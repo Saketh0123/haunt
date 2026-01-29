@@ -47,9 +47,29 @@ app.use(express.static('.')); // Serve static HTML files
 
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/travel-agency';
-mongoose.connect(MONGODB_URI)
+// Serverless-safe connection caching (prevents creating new connections per request)
+let _cached = global.__MONGOOSE_CONN__;
+if (!_cached) {
+  _cached = global.__MONGOOSE_CONN__ = { conn: null, promise: null };
+}
+
+async function connectToDatabase() {
+  if (_cached.conn) return _cached.conn;
+  if (!_cached.promise) {
+    _cached.promise = mongoose
+      .connect(MONGODB_URI)
+      .then((m) => m);
+  }
+  _cached.conn = await _cached.promise;
+  return _cached.conn;
+}
+
+connectToDatabase()
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => {
+    // Keep server running; endpoints will error until DB is available
+    console.error('MongoDB connection error:', err);
+  });
 
 // API Routes
 

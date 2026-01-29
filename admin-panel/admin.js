@@ -356,7 +356,17 @@ function openEditModal(tour) {
 async function loadTours() {
     try {
         const response = await fetch(`${API_URL}/tours?status=all`);
-        allTours = await response.json();
+        const tours = await response.json();
+        // Sort tours with Indian first, then International, then by title
+        const categoryOrder = { indian: 0, international: 1 };
+        allTours = (Array.isArray(tours) ? tours : []).slice().sort((a, b) => {
+            const aCat = categoryOrder[a?.category] ?? 99;
+            const bCat = categoryOrder[b?.category] ?? 99;
+            if (aCat !== bCat) return aCat - bCat;
+            const aTitle = (a?.title || '').toLowerCase();
+            const bTitle = (b?.title || '').toLowerCase();
+            return aTitle.localeCompare(bTitle);
+        });
         renderToursTable(allTours);
     } catch (error) {
         console.error('Error loading tours:', error);
@@ -814,7 +824,23 @@ function renderTourDates(tour) {
         return '<p class="text-sm text-gray-500">No dates available</p>';
     }
     
-    return tour.availableDates.map((date, index) => {
+    // Filter out past dates (only show today and future dates)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const futureDates = tour.availableDates.filter(date => {
+        if (!date.startDate) return false;
+        const dateObj = new Date(date.startDate);
+        dateObj.setHours(0, 0, 0, 0);
+        return dateObj >= today;
+    });
+    
+    if (futureDates.length === 0) {
+        return '<p class="text-sm text-gray-500">No upcoming dates</p>';
+    }
+    
+    return futureDates.map((date, originalIndex) => {
+        const index = tour.availableDates.indexOf(date);
         const dateObj = date.startDate ? new Date(date.startDate) : null;
         const formattedDate = dateObj ? 
             `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}` : 
