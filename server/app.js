@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-const Tour = require('./tourModel');
-const Settings = require('./settingsModel');
-const { uploadImage, uploadMultipleImages } = require('./cloudinary');
+const Tour = require('./models/tourModel');
+const Settings = require('./models/settingsModel');
+const { uploadImage, uploadMultipleImages } = require('./lib/cloudinary');
 
 const app = express();
 
