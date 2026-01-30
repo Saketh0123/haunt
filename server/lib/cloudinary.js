@@ -13,7 +13,7 @@ cloudinary.config({
  * @param {string} folder - Folder name in Cloudinary (e.g., 'logos', 'hero', 'tours')
  * @returns {Promise<string>} - Cloudinary URL
  */
-async function uploadImage(base64String, folder = 'travel-agency') {
+async function uploadImage(base64String, folder = 'haunt') {
   try {
     const result = await cloudinary.uploader.upload(base64String, {
       folder: folder,
@@ -48,7 +48,7 @@ async function deleteImage(publicId) {
  * @param {string} folder - Folder name in Cloudinary
  * @returns {Promise<Array<string>>} - Array of Cloudinary URLs
  */
-async function uploadMultipleImages(base64Array, folder = 'travel-agency') {
+async function uploadMultipleImages(base64Array, folder = 'haunt') {
   try {
     const uploadPromises = base64Array.map(base64 => uploadImage(base64, folder));
     return await Promise.all(uploadPromises);

@@ -46,7 +46,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('.')); // Serve static HTML files
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/travel-agency';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/haunt_db';
 // Serverless-safe connection caching (prevents creating new connections per request)
 let _cached = global.__MONGOOSE_CONN__;
 if (!_cached) {
@@ -153,7 +153,7 @@ app.post('/api/upload/image', async (req, res) => {
     if (!image) {
       return res.status(400).json({ error: 'No image provided' });
     }
-    const imageUrl = await uploadImage(image, folder || 'travel-agency');
+    const imageUrl = await uploadImage(image, folder || 'haunt');
     res.json({ url: imageUrl });
   } catch (error) {
     console.error('Image upload error:', error);
@@ -168,7 +168,7 @@ app.post('/api/upload/images', async (req, res) => {
     if (!images || !Array.isArray(images)) {
       return res.status(400).json({ error: 'No images array provided' });
     }
-    const imageUrls = await uploadMultipleImages(images, folder || 'travel-agency');
+    const imageUrls = await uploadMultipleImages(images, folder || 'haunt');
     res.json({ urls: imageUrls });
   } catch (error) {
     console.error('Multiple images upload error:', error);

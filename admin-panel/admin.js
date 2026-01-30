@@ -3,7 +3,7 @@ const API_URL = (typeof window !== 'undefined' && window.API_BASE) ? window.API_
 const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'admin123';
 const CLOUDINARY_CLOUD_NAME = 'dfw1w02tb';
-const CLOUDINARY_UPLOAD_PRESET = 'travel_unsigned';
+const CLOUDINARY_UPLOAD_PRESET = 'haunt_unsigned';
 let allTours = [];
 let heroImageUrl = '';
 let galleryImagesUrls = [];
