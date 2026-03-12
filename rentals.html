@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         html, body { 
             overflow-x: hidden; 
             width: 100%; 
@@ -422,6 +423,28 @@
             }
         }
         
+        /* Vehicle cards horizontal scroll on mobile */
+        .vehicles-arrow {
+            display: none;
+        }
+        @media (max-width: 767px) {
+            #vehiclesGrid {
+                display: flex !important;
+                grid-template-columns: none !important;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 1rem;
+                padding-bottom: 1rem;
+                scrollbar-width: none;
+            }
+            #vehiclesGrid::-webkit-scrollbar { display: none; }
+            #vehiclesGrid > * {
+                flex: 0 0 88%;
+                scroll-snap-align: start;
+            }
+        }
+
         .popular-badge {
             position: absolute;
             top: -10px;
@@ -436,6 +459,9 @@
         }
         @media (max-width:767px){
           .desktop-only {display:none !important;}
+          header nav { padding-top: 1.1rem !important; padding-bottom: 1.1rem !important; }
+          #site-logo { width: 3rem !important; height: 3rem !important; }
+          #site-company-name { font-size: 1.15rem !important; }
         }
         .nav-link {
           position: relative;
@@ -706,23 +732,11 @@
                 </div>
                 <!-- Desktop Navigation -->
                 <div id="desktop-nav" class="desktop-only flex-1 flex items-center justify-center gap-12">
-                    <a href="home.html#home" class="nav-link text-gray-800 font-semibold text-lg px-2">Home</a>
-                    <a href="home.html#why-travel" class="nav-link text-gray-800 font-semibold text-lg px-2">About</a>
-                    
-                    <!-- Destinations Dropdown -->
-                    <div id="destinations-dropdown" class="relative group">
-                        <button id="destinations-btn" class="dropdown-btn text-gray-800 font-semibold text-lg flex items-center gap-1 px-2">
-                            Destinations
-                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div id="destinations-menu" class="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2 z-50">
-                            <a href="indiandestinations/indiandestinations.html" class="block px-5 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-medium text-base rounded-t-lg transition-all duration-200 border-b border-gray-100 text-center">🇮🇳 India</a>
-                            <a href="internationaldestinations/internationaldestinations.html" class="block px-5 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-medium text-base rounded-b-lg transition-all duration-200 text-center">✈️ International</a>
-                        </div>
-                    </div>
-                    
-                    <a href="trip.html" class="nav-link text-gray-800 font-semibold text-lg px-2">Packages</a>
-                    <a href="rentals.html" class="nav-link text-gray-800 font-semibold text-lg px-2">Travells</a>
+                    <a href="#hero-rentals" class="nav-link text-gray-800 font-semibold text-lg px-2">Home</a>
+                    <a href="#why-choose" class="nav-link text-gray-800 font-semibold text-lg px-2">About</a>
+                    <a href="#vehicles" class="nav-link text-gray-800 font-semibold text-lg px-2">Vehicles</a>
+                    <a href="#pricing" class="nav-link text-gray-800 font-semibold text-lg px-2">Pricing</a>
+                    <a href="#testimonials" class="nav-link text-gray-800 font-semibold text-lg px-2">Testimonials</a>
                 </div>
                 
                 <!-- Social Media Icons -->
@@ -752,15 +766,11 @@
     <div id="mobile-menu-overlay">
         <button id="mobile-close-btn" aria-label="Close menu">&times;</button>
         <div class="mobile-nav-items">
-            <a href="home.html">Home</a>
-            <a href="home.html#why-travel">About</a>
-            <button id="mobile-dest-toggle" type="button">Destinations ▾</button>
-            <div id="mobile-submenu" class="mobile-submenu-items">
-                <a href="indiandestinations/indiandestinations.html">🇮🇳 India</a>
-                <a href="internationaldestinations/internationaldestinations.html">✈️ International</a>
-            </div>
-            <a href="trip.html">Packages</a>
-            <a href="rentals.html">Travells</a>
+            <a href="#hero-rentals" onclick="document.getElementById('mobile-menu-overlay').classList.remove('active')">Home</a>
+            <a href="#why-choose" onclick="document.getElementById('mobile-menu-overlay').classList.remove('active')">About</a>
+            <a href="#vehicles" onclick="document.getElementById('mobile-menu-overlay').classList.remove('active')">Vehicles</a>
+            <a href="#pricing" onclick="document.getElementById('mobile-menu-overlay').classList.remove('active')">Pricing</a>
+            <a href="#testimonials" onclick="document.getElementById('mobile-menu-overlay').classList.remove('active')">Testimonials</a>
         </div>
         <div class="mobile-social-icons">
             <a href="#" target="_blank" class="fb-icon" aria-label="Facebook">
@@ -794,6 +804,22 @@
                 destToggle.addEventListener('click', () => submenu.classList.toggle('show'));
             }
         })();
+
+        // Smooth scroll for all in-page nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                const headerHeight = 80;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                // Close mobile menu if open
+                const overlay = document.getElementById('mobile-menu-overlay');
+                if (overlay) overlay.classList.remove('active');
+            });
+        });
     </script>
         <script>
             const API_URL = (typeof window !== 'undefined' && window.API_BASE) ? window.API_BASE : '/api';
@@ -955,7 +981,7 @@
     </section>
 
     <!-- Pricing Info -->
-    <section class="py-20 px-4 bg-white">
+    <section id="pricing" class="py-20 px-4 bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Transparent Pricing</h2>
@@ -968,7 +994,7 @@
     </section>
 
     <!-- Why Choose Us -->
-    <section class="py-20 px-4 bg-gradient-to-b from-white to-orange-50">
+    <section id="why-choose" class="py-20 px-4 bg-gradient-to-b from-white to-orange-50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
@@ -1035,7 +1061,7 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="py-20 px-4 bg-gradient-to-b from-white to-pink-50">
+    <section id="testimonials" class="py-20 px-4 bg-gradient-to-b from-white to-pink-50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
@@ -1342,15 +1368,11 @@
                 });
             });
         // Mobile menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu-overlay').classList.add('active');
-        });
-        document.getElementById('mobile-close-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu-overlay').classList.remove('active');
-        });
-        document.getElementById('mobile-dest-toggle').addEventListener('click', () => {
-            document.getElementById('mobile-submenu').classList.toggle('show');
-        });
+        const _mBtn = document.getElementById('mobile-menu-btn');
+        const _mOverlay = document.getElementById('mobile-menu-overlay');
+        const _mClose = document.getElementById('mobile-close-btn');
+        if (_mBtn && _mOverlay) _mBtn.addEventListener('click', () => _mOverlay.classList.add('active'));
+        if (_mClose && _mOverlay) _mClose.addEventListener('click', () => _mOverlay.classList.remove('active'));
 
         // Hero slider (robust with dynamic slides)
         let currentSlide = 0;

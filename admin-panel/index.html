@@ -513,12 +513,8 @@
                 <h2>🌍 Travel Admin</h2>
             </div>
             <nav class="sidebar-nav">
-                <div class="nav-item active" onclick="showView('tours')">
-                    <span class="nav-icon">📋</span>
-                    <span>Tours</span>
-                </div>
-                <div class="nav-item" onclick="showView('travells')">
-                    <span class="nav-icon">🚌</span>
+                <div class="nav-item active" onclick="showView('travells')">
+                    <span class="nav-icon"></span>
                     <span>Travells</span>
                 </div>
                 <div class="nav-item" onclick="showView('bookings')">
@@ -529,25 +525,9 @@
                     <span class="nav-icon">🧾</span>
                     <span>Bill (Travells)</span>
                 </div>
-                <div class="nav-item" onclick="showView('tourBills')">
-                    <span class="nav-icon">🏝️</span>
-                    <span>Bill (Tours)</span>
-                </div>
                 <div class="nav-item" onclick="showView('home')">
                     <span class="nav-icon">🏠</span>
                     <span>Home Settings</span>
-                </div>
-                <div class="nav-item" onclick="showView('dates')">
-                    <span class="nav-icon">📅</span>
-                    <span>Available Dates</span>
-                </div>
-                <div class="nav-item" onclick="showView('pricing')">
-                    <span class="nav-icon">💰</span>
-                    <span>Pricing</span>
-                </div>
-                <div class="nav-item" onclick="showView('duration')">
-                    <span class="nav-icon">⏱️</span>
-                    <span>Duration</span>
                 </div>
             </nav>
             <div style="position: absolute; bottom: 20px; left: 0; right: 0; padding: 0 25px; height: 42px;">
@@ -567,9 +547,9 @@
                         <span></span>
                         <span></span>
                     </div>
-                    <h1 id="viewTitle" class="text-2xl font-bold text-gray-800">Tours Management</h1>
+                    <h1 id="viewTitle" class="text-2xl font-bold text-gray-800">Vehicle Rentals Management</h1>
                 </div>
-                <button id="addTourBtn" onclick="openAddModal()" class="btn-primary">+ Add New Tour</button>
+                <button id="addTourBtn" onclick="openAddModal()" class="btn-primary hidden">+ Add New Tour</button>
             </div>
 
             <!-- Home Settings View -->
@@ -701,30 +681,6 @@
                             <button onclick="saveFooterInfo()" class="btn-primary">Save Footer Info</button>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Tours View -->
-            <div id="toursView" class="view-content">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Tour Title</th>
-                                <th>Location</th>
-                                <th>Category</th>
-                                <th>Duration</th>
-                                <th>Price</th>
-                                <th>Available Dates</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="toursTableBody">
-                            <tr>
-                                <td colspan="7" class="text-center py-8 text-gray-500">Loading tours...</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
 
@@ -870,53 +826,6 @@
                 </div>
             </div>
 
-            <!-- Tour Bills View -->
-            <div id="tourBillsView" class="view-content hidden">
-                <div class="content-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h1>Tour Bill Management</h1>
-                    <button class="btn-primary" onclick="openTourBillModal()">
-                        <span>+ Create Tour Bill</span>
-                    </button>
-                </div>
-                
-                <!-- Search Filters -->
-                <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
-                    <div class="form-group" style="flex: 1; margin: 0;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Search by Bill Number</label>
-                        <input type="number" id="tourBillSearchInput" placeholder="Enter bill serial number" 
-                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;"
-                               oninput="filterTourBills()">
-                    </div>
-                    <div class="form-group" style="flex: 1; margin: 0;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Billing Date</label>
-                        <input type="date" id="tourBillFilterDate" 
-                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;"
-                               onchange="filterTourBills()">
-                    </div>
-                    <button onclick="clearTourBillFilters()" style="padding: 10px 20px; margin: 0; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Clear Filters</button>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Bill No</th>
-                                <th>Date</th>
-                                <th>Customer</th>
-                                <th>Tour</th>
-                                <th>Persons</th>
-                                <th>Grand Total</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tourBillsTableBody">
-                            <tr>
-                                <td colspan="7" class="text-center py-8 text-gray-500">No tour bills created yet</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- Dates Management View -->
             <div id="datesView" class="view-content hidden">
                 <div class="bg-white rounded-lg p-6 shadow">
@@ -927,19 +836,6 @@
                 </div>
             </div>
 
-            <!-- Pricing View -->
-            <div id="pricingView" class="view-content hidden">
-                <div id="pricingContent">
-                    <p class="text-gray-500">Loading...</p>
-                </div>
-            </div>
-
-            <!-- Duration View -->
-            <div id="durationView" class="view-content hidden">
-                <div id="durationContent">
-                    <p class="text-gray-500">Loading...</p>
-                </div>
-            </div>
         </div>
     </div>
 

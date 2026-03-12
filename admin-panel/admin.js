@@ -284,7 +284,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             error.classList.add('hidden');
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
-            loadTours();
+            initDefaultView();
         } else {
             error.textContent = result.error || 'Invalid username or password';
             error.classList.remove('hidden');
@@ -311,12 +311,30 @@ function toggleSidebar() {
 }
 
 // View Navigation
+function initDefaultView() {
+    document.getElementById('viewTitle').textContent = 'Vehicle Rentals Management';
+    document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
+    const travellsView = document.getElementById('travellsView');
+    if (travellsView) travellsView.classList.remove('hidden');
+    loadTravells();
+    loadHeroImages();
+    loadPricingCards();
+}
+
 function showView(viewName) {
     // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
     });
-    event.target.closest('.nav-item').classList.add('active');
+    if (typeof event !== 'undefined' && event && event.target) {
+        event.target.closest('.nav-item').classList.add('active');
+    } else {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(viewName)) {
+                item.classList.add('active');
+            }
+        });
+    }
     
     // Hide all views
     document.querySelectorAll('.view-content').forEach(view => {
